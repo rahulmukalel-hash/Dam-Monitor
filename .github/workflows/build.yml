@@ -16,6 +16,16 @@ jobs:
       with:
         python-version: '3.9'
 
+    - name: Cache Buildozer and dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.buildozer
+          .buildozer
+        key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
+        restore-keys: |
+          ${{ runner.os }}-buildozer-
+
     - name: Install System Dependencies
       run: |
         sudo apt update -qq
@@ -61,8 +71,14 @@ jobs:
           sleep 10
         done
 
+    - name: Locate and Collect APK
+      run: |
+        mkdir -p output_apk
+        find . -type f -name "*.apk" -exec cp {} output_apk/ \;
+        ls -lh output_apk/
+
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: dam-monitor-apk
-        path: '**/*.apk'
+        path: output_apk/*.apk
