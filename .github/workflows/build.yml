@@ -30,19 +30,6 @@ jobs:
         git clone https://github.com/kivy/python-for-android.git /tmp/p4a
         sed -i 's/pip install -U pip/true/g' /tmp/p4a/pythonforandroid/build.py
         
-        # fix for libthorvg / libomp
-        python3 -c "
-        path = '/tmp/p4a/pythonforandroid/recipes/libthorvg/__init__.py'
-        with open(path, 'r') as f:
-            text = f.read()
-        fix = '''target_k = 'aarch64' if '64' in arch.arch else '/arm/'
-        found_omps = [p for p in __import__('glob').glob(self.ctx.ndk_dir + '/**/libomp.so', recursive=True) if target_k in p]
-        clang_lib_dir = __import__('os').path.dirname(found_omps[0]) if found_omps else self.ctx.ndk_dir'''
-        text = text.replace('clang_lib_dir = glob(pattern)[0]', fix)
-        with open(path, 'w') as f:
-            f.write(text)
-        "
-
     - name: Generate buildozer.spec
       run: |
         cat << 'EOF' > buildozer.spec
