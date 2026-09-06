@@ -56,7 +56,10 @@ jobs:
 
     - name: Build APK with Buildozer
       run: |
-        buildozer android debug
+        for i in {1..3}; do
+          buildozer android debug && break || echo "Download timed out, retrying..."
+          sleep 10
+        done
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
