@@ -14,7 +14,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: '3.9'
 
     - name: Install System Dependencies
       run: |
@@ -27,9 +27,9 @@ jobs:
 
     - name: Set up python-for-android
       run: |
-        git clone https://github.com/kivy/python-for-android.git /tmp/p4a
+        git clone -b master https://github.com/kivy/python-for-android.git /tmp/p4a
         sed -i 's/pip install -U pip/true/g' /tmp/p4a/pythonforandroid/build.py
-        
+
     - name: Generate buildozer.spec
       run: |
         cat << 'EOF' > buildozer.spec
